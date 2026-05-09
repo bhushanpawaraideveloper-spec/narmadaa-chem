@@ -90,7 +90,7 @@ backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 's
 // ===== Contact Form =====
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
+  contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value;
     const email = document.getElementById('email').value;
@@ -98,22 +98,34 @@ if (contactForm) {
     const subject = document.getElementById('subject').value;
     const message = document.getElementById('message').value;
 
-    // Compose mailto
-    const mailtoLink = `mailto:info@narmadaachem.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\n${message}`
-    )}`;
-    window.location.href = mailtoLink;
+    // Send form data via Web3Forms
+    const formData = new FormData(contactForm);
+    formData.append('access_key', 'd0500f86-3fe8-4bf5-85e7-c57377206cb8');
 
-    // Show success
-    const btn = contactForm.querySelector('.form-submit');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '✓ Message Sent!';
-    btn.style.background = '#10b981';
-    setTimeout(() => {
-      btn.innerHTML = originalText;
-      btn.style.background = '';
-      contactForm.reset();
-    }, 3000);
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        // Show success
+        const btn = contactForm.querySelector('.form-submit');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✓ Message Sent!';
+        btn.style.background = '#10b981';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.background = '';
+          contactForm.reset();
+        }, 3000);
+      } else {
+        throw new Error('Submission failed');
+      }
+    } catch (error) {
+      alert('Something went wrong. Please try again later.');
+      console.error('Form Error:', error);
+    }
   });
 }
 
