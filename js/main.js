@@ -99,7 +99,7 @@ if (contactForm) {
     const message = document.getElementById('message').value;
 
     // Compose mailto
-    const mailtoLink = `mailto:narmadaachem@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+    const mailtoLink = `mailto:info@narmadaachem.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
       `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\n\n${message}`
     )}`;
     window.location.href = mailtoLink;
